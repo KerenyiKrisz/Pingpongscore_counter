@@ -183,32 +183,106 @@
             transform: scale(0.95);
         }
 
+        .stats-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .history-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f0f0;
+            border-radius: 15px;
+        }
+
+        .history-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .winner {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .btn-save-match {
+            background-color: #2196F3;
+            color: white;
+            width: auto;
+            padding: 12px 30px;
+            font-size: 1em;
+            margin-left: 10px;
+        }
+
+        .btn-save-match:hover {
+            background-color: #0b7dda;
+            transform: scale(1.05);
+        }
+
         @media (max-width: 768px) {
-            .scoreboard {
+            .stats-section {
                 grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .header h1 {
-                font-size: 2em;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            .player {
-                padding: 20px;
-            }
-
-            .score-display {
-                font-size: 3em;
-            }
-
-            button {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5em;
             }
         }
     </style>
@@ -246,6 +320,48 @@
 
         <div class="reset-section">
             <button class="btn-reset" onclick="resetScores()">Reset Scores</button>
+            <button class="btn-save-match" onclick="saveMatch()">Save Match</button>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-name">Krisz</div>
+                <div class="stat-row">
+                    <span class="stat-label">Wins</span>
+                    <span class="stat-value" id="krisz-wins">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Losses</span>
+                    <span class="stat-value" id="krisz-losses">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Win Rate</span>
+                    <span class="stat-value" id="krisz-rate">0%</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-name">Georg</div>
+                <div class="stat-row">
+                    <span class="stat-label">Wins</span>
+                    <span class="stat-value" id="georg-wins">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Losses</span>
+                    <span class="stat-value" id="georg-losses">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Win Rate</span>
+                    <span class="stat-value" id="georg-rate">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">Match History</div>
+            <div class="history-list" id="history-list">
+                <div style="color: #999; text-align: center;">No matches yet</div>
+            </div>
         </div>
     </div>
 
@@ -254,6 +370,13 @@
             krisz: 0,
             georg: 0
         };
+
+        let stats = {
+            krisz: { wins: 0, losses: 0 },
+            georg: { wins: 0, losses: 0 }
+        };
+
+        let matchHistory = [];
 
         function increaseScore(player) {
             scores[player]++;
@@ -276,24 +399,93 @@
             saveScores();
         }
 
+        function saveMatch() {
+            if (scores.krisz === 0 && scores.georg === 0) {
+                alert('Play a match first!');
+                return;
+            }
+
+            let winner = scores.krisz > scores.georg ? 'Krisz' : 'Georg';
+            let krizScore = scores.krisz;
+            let georgScore = scores.georg;
+
+            stats.krisz.wins += scores.krisz > scores.georg ? 1 : 0;
+            stats.krisz.losses += scores.krisz < scores.georg ? 1 : 0;
+            stats.georg.wins += scores.georg > scores.krisz ? 1 : 0;
+            stats.georg.losses += scores.georg < scores.krisz ? 1 : 0;
+
+            matchHistory.unshift({
+                date: new Date().toLocaleString(),
+                winner: winner,
+                krizScore: krizScore,
+                georgScore: georgScore
+            });
+
+            saveData();
+            resetScores();
+            updateStats();
+            updateHistory();
+        }
+
         function updateDisplay() {
             document.getElementById('krisz-score').textContent = scores.krisz;
             document.getElementById('georg-score').textContent = scores.georg;
         }
 
-        function saveScores() {
-            localStorage.setItem('pingpongScores', JSON.stringify(scores));
+        function updateStats() {
+            document.getElementById('krisz-wins').textContent = stats.krisz.wins;
+            document.getElementById('krisz-losses').textContent = stats.krisz.losses;
+            document.getElementById('georg-wins').textContent = stats.georg.wins;
+            document.getElementById('georg-losses').textContent = stats.georg.losses;
+
+            let krizTotal = stats.krisz.wins + stats.krisz.losses;
+            let georgTotal = stats.georg.wins + stats.georg.losses;
+
+            document.getElementById('krisz-rate').textContent = krizTotal > 0 
+                ? Math.round((stats.krisz.wins / krizTotal) * 100) + '%' 
+                : '0%';
+            document.getElementById('georg-rate').textContent = georgTotal > 0 
+                ? Math.round((stats.georg.wins / georgTotal) * 100) + '%' 
+                : '0%';
         }
 
-        function loadScores() {
-            const saved = localStorage.getItem('pingpongScores');
-            if (saved) {
-                scores = JSON.parse(saved);
-                updateDisplay();
+        function updateHistory() {
+            const historyList = document.getElementById('history-list');
+            if (matchHistory.length === 0) {
+                historyList.innerHTML = '<div style="color: #999; text-align: center;">No matches yet</div>';
+                return;
             }
+
+            historyList.innerHTML = matchHistory.map((match, index) => `
+                <div class="history-item">
+                    <span class="winner">${match.winner}</span> won 
+                    <strong>${match.krizScore}-${match.georgScore}</strong> 
+                    on ${match.date}
+                </div>
+            `).join('');
         }
 
-        loadScores();
+        function saveData() {
+            localStorage.setItem('pingpongScores', JSON.stringify(scores));
+            localStorage.setItem('pingpongStats', JSON.stringify(stats));
+            localStorage.setItem('pingpongHistory', JSON.stringify(matchHistory));
+        }
+
+        function loadData() {
+            const savedScores = localStorage.getItem('pingpongScores');
+            const savedStats = localStorage.getItem('pingpongStats');
+            const savedHistory = localStorage.getItem('pingpongHistory');
+
+            if (savedScores) scores = JSON.parse(savedScores);
+            if (savedStats) stats = JSON.parse(savedStats);
+            if (savedHistory) matchHistory = JSON.parse(savedHistory);
+
+            updateDisplay();
+            updateStats();
+            updateHistory();
+        }
+
+        loadData();
     </script>
 </body>
 </html>
