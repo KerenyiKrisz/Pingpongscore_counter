@@ -255,10 +255,33 @@
             border-bottom: 1px solid #eee;
             font-size: 0.95em;
             color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .history-item:last-child {
             border-bottom: none;
+        }
+
+        .history-text {
+            flex: 1;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #da190b;
         }
 
         .winner {
@@ -427,6 +450,23 @@
             updateHistory();
         }
 
+        function deleteMatch(index) {
+            const match = matchHistory[index];
+            
+            if (match.winner === 'Krisz') {
+                stats.krisz.wins -= 1;
+                stats.georg.losses -= 1;
+            } else {
+                stats.georg.wins -= 1;
+                stats.krisz.losses -= 1;
+            }
+
+            matchHistory.splice(index, 1);
+            saveData();
+            updateStats();
+            updateHistory();
+        }
+
         function updateDisplay() {
             document.getElementById('krisz-score').textContent = scores.krisz;
             document.getElementById('georg-score').textContent = scores.georg;
@@ -458,9 +498,12 @@
 
             historyList.innerHTML = matchHistory.map((match, index) => `
                 <div class="history-item">
-                    <span class="winner">${match.winner}</span> won 
-                    <strong>${match.krizScore}-${match.georgScore}</strong> 
-                    on ${match.date}
+                    <div class="history-text">
+                        <span class="winner">${match.winner}</span> won 
+                        <strong>${match.krizScore}-${match.georgScore}</strong> 
+                        on ${match.date}
+                    </div>
+                    <button class="btn-delete" onclick="deleteMatch(${index})">Delete</button>
                 </div>
             `).join('');
         }
