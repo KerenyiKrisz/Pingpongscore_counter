@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping-Pong Scoreboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #333;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .scoreboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .player:hover {
+            transform: translateY(-5px);
+        }
+
+        .player-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .player-name {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+            min-width: 120px;
+            line-height: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            width: 60px;
+            height: 60px;
+            font-size: 1.8em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-increase {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-increase:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        .btn-increase:active {
+            transform: scale(0.95);
+        }
+
+        .btn-decrease {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-decrease:hover {
+            background-color: #da190b;
+            transform: scale(1.1);
+        }
+
+        .btn-decrease:active {
+            transform: scale(0.95);
+        }
+
+        .reset-section {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .btn-reset {
+            background-color: #ff9800;
+            color: white;
+            width: auto;
+            padding: 12px 30px;
+            font-size: 1em;
+        }
+
+        .btn-reset:hover {
+            background-color: #e68900;
+            transform: scale(1.05);
+        }
+
+        .btn-reset:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .scoreboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .player {
+                padding: 20px;
+            }
+
+            .score-display {
+                font-size: 3em;
+            }
+
+            button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏓 Ping-Pong Scoreboard</h1>
+            <p>Let the game begin!</p>
+        </div>
+
+        <div class="scoreboard">
+            <!-- Krisz Section -->
+            <div class="player">
+                <img src="krisz.png" alt="Krisz" class="player-image">
+                <div class="player-name">Krisz</div>
+                <div class="score-display" id="krisz-score">0</div>
+                <div class="controls">
+                    <button class="btn-decrease" onclick="decreaseScore('krisz')">−</button>
+                    <button class="btn-increase" onclick="increaseScore('krisz')">+</button>
+                </div>
+            </div>
+
+            <!-- Georg Section -->
+            <div class="player">
+                <img src="georg.png" alt="Georg" class="player-image">
+                <div class="player-name">Georg</div>
+                <div class="score-display" id="georg-score">0</div>
+                <div class="controls">
+                    <button class="btn-decrease" onclick="decreaseScore('georg')">−</button>
+                    <button class="btn-increase" onclick="increaseScore('georg')">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="reset-section">
+            <button class="btn-reset" onclick="resetScores()">Reset Scores</button>
+        </div>
+    </div>
+
+    <script>
+        let scores = {
+            krisz: 0,
+            georg: 0
+        };
+
+        function increaseScore(player) {
+            scores[player]++;
+            updateDisplay();
+        }
+
+        function decreaseScore(player) {
+            if (scores[player] > 0) {
+                scores[player]--;
+                updateDisplay();
+            }
+        }
+
+        function resetScores() {
+            scores.krisz = 0;
+            scores.georg = 0;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('krisz-score').textContent = scores.krisz;
+            document.getElementById('georg-score').textContent = scores.georg;
+        }
+    </script>
+</body>
+</html>
