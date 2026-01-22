@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ping-Pong Scoreboard</title>
+    <title>Rally - Ping Pong Score Tracker</title>
     <style>
         * {
             margin: 0;
@@ -13,12 +13,25 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: url('https://images.unsplash.com/photo-1583822261290-991b38693d1b?w=1600') center/cover fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
@@ -203,8 +216,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏓 Ping-Pong Scoreboard</h1>
-            <p>Let the game begin!</p>
+            <h1>Rally</h1>
+            <p>Track your matches</p>
         </div>
 
         <div class="scoreboard">
