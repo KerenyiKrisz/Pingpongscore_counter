@@ -70,8 +70,8 @@
         }
 
         .player-image {
-            width: 150px;
-            height: 150px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 20px;
@@ -240,12 +240,14 @@
         function increaseScore(player) {
             scores[player]++;
             updateDisplay();
+            saveScores();
         }
 
         function decreaseScore(player) {
             if (scores[player] > 0) {
                 scores[player]--;
                 updateDisplay();
+                saveScores();
             }
         }
 
@@ -253,12 +255,27 @@
             scores.krisz = 0;
             scores.georg = 0;
             updateDisplay();
+            saveScores();
         }
 
         function updateDisplay() {
             document.getElementById('krisz-score').textContent = scores.krisz;
             document.getElementById('georg-score').textContent = scores.georg;
         }
+
+        function saveScores() {
+            localStorage.setItem('pingpongScores', JSON.stringify(scores));
+        }
+
+        function loadScores() {
+            const saved = localStorage.getItem('pingpongScores');
+            if (saved) {
+                scores = JSON.parse(saved);
+                updateDisplay();
+            }
+        }
+
+        loadScores();
     </script>
 </body>
 </html>
