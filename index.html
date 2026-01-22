@@ -71,12 +71,17 @@
 
         .player-image {
             width: 220px;
-            height: 220px;
-            border-radius: 50%;
+            height: 280px;
             object-fit: cover;
             margin-bottom: 20px;
             border: 5px solid #667eea;
             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            clip-path: polygon(
+                30% 0%, 70% 0%,
+                85% 15%, 95% 30%, 95% 70%, 85% 85%,
+                70% 100%, 30% 100%,
+                15% 85%, 5% 70%, 5% 30%, 15% 15%
+            );
         }
 
         .player-name {
